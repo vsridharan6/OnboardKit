@@ -70,6 +70,7 @@ final public class OnboardViewController: UIViewController {
     pageViewController.dataSource = self
     pageViewController.delegate = self
     pageViewController.view.frame = view.bounds
+    pageViewController.isPagingEnabled = false
 
     let pageControlApperance = UIPageControl.appearance(whenContainedInInstancesOf: [OnboardViewController.self])
     pageControlApperance.pageIndicatorTintColor = appearanceConfiguration.tintColor.withAlphaComponent(0.3)
@@ -111,14 +112,6 @@ public extension OnboardViewController {
   func presentFrom(_ viewController: UIViewController, animated: Bool) {
     viewController.present(self, animated: animated)
   }
-    
-    func setPagingEnabled() {
-        pageViewController.isPagingEnabled = true
-    }
-    
-    func setPagingDisabled() {
-        pageViewController.isPagingEnabled = false
-    }
 }
 
 extension OnboardViewController: UIPageViewControllerDataSource {
