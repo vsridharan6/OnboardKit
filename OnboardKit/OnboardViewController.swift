@@ -7,9 +7,31 @@ import UIKit
 
 /**
  */
+
+extension UIPageViewController {
+    var isPagingEnabled: Bool {
+        get {
+            var isEnabled: Bool = true
+            for view in view.subviews {
+                if let subView = view as? UIScrollView {
+                    isEnabled = subView.isScrollEnabled
+                }
+            }
+            return isEnabled
+        }
+        set {
+            for view in view.subviews {
+                if let subView = view as? UIScrollView {
+                    subView.isScrollEnabled = newValue
+                }
+            }
+        }
+    }
+}
+
 final public class OnboardViewController: UIViewController {
 
-  private let pageViewController = UIPageViewController(transitionStyle: .scroll,
+  let pageViewController = UIPageViewController(transitionStyle: .scroll,
                                                             navigationOrientation: .horizontal,
                                                             options: nil)
   private let pageItems: [OnboardPage]
