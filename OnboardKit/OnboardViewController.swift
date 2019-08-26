@@ -31,7 +31,7 @@ extension UIPageViewController {
 
 final public class OnboardViewController: UIViewController {
 
-  let pageViewController = UIPageViewController(transitionStyle: .scroll,
+  private let pageViewController = UIPageViewController(transitionStyle: .scroll,
                                                             navigationOrientation: .horizontal,
                                                             options: nil)
   private let pageItems: [OnboardPage]
@@ -111,6 +111,14 @@ public extension OnboardViewController {
   func presentFrom(_ viewController: UIViewController, animated: Bool) {
     viewController.present(self, animated: animated)
   }
+    
+    func setPagingEnabled() {
+        pageViewController.isPagingEnabled = true
+    }
+    
+    func setPagingDisabled() {
+        pageViewController.isPagingEnabled = false
+    }
 }
 
 extension OnboardViewController: UIPageViewControllerDataSource {
