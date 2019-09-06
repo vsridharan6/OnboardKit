@@ -195,7 +195,7 @@ internal final class OnboardPageViewController: UIViewController {
       descriptionLabel.text = pageDescription
       NSLayoutConstraint.activate([
         descriptionLabel.heightAnchor.constraint(greaterThanOrEqualTo: pageStackView.heightAnchor, multiplier: 0.2),
-        descriptionLabel.widthAnchor.constraint(equalTo: pageStackView.widthAnchor, multiplier: 0.5)
+        descriptionLabel.widthAnchor.constraint(equalTo: pageStackView.widthAnchor, multiplier: 0.8)
         ])
     } else {
       descriptionLabel.isHidden = true
