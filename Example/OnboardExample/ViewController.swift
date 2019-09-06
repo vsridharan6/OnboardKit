@@ -11,7 +11,11 @@ class ViewController: UIViewController {
   lazy var onboardingPages: [OnboardPage] = {
     let pageOne = OnboardPage(title: "Welcome to Habitat",
                               imageName: "Onboarding1",
-                              description: "Habitat is an easy to use productivity app designed to keep you motivated.")
+                              description: "Habitat is an easy to use productivity app designed to keep you motivated.",
+                              actionButtonSubtitle: "Don't allow?",
+                              subtitleAction: { [weak self] completion in
+                                self?.showAlert(completion)
+    })
 
     let pageTwo = OnboardPage(title: "Habit Entries",
                               imageName: "Onboarding2",
@@ -28,6 +32,10 @@ class ViewController: UIViewController {
                                actionButtonTitle: "Enable Notifications",
                                action: { [weak self] completion in
                                 self?.showAlert(completion)
+    },
+                               actionButtonSubtitle: "Don't allow?",
+                               subtitleAction: { [weak self] completion in
+                                self?.showAlert(completion)
     })
 
     let pageFive = OnboardPage(title: "All Ready",
@@ -41,7 +49,11 @@ class ViewController: UIViewController {
   lazy var onboardingPagesAlternative: [OnboardPage] = {
     let pageOne = OnboardPage(title: "Welcome to Habitat",
                               imageName: "Onboarding1_alt",
-                              description: "Habitat is an easy to use productivity app designed to keep you motivated.")
+                              description: "Habitat is an easy to use productivity app designed to keep you motivated.",
+                              actionButtonSubtitle: "Don't allow?",
+                              subtitleAction: { [weak self] completion in
+                                self?.showAlert(completion)
+    })
 
     let pageTwo = OnboardPage(title: "Habit Entries",
                               imageName: "Onboarding2",
@@ -81,6 +93,7 @@ class ViewController: UIViewController {
     let titleColor = UIColor(red: 1.00, green: 0.35, blue: 0.43, alpha: 1.00)
     let boldTitleFont = UIFont.systemFont(ofSize: 32.0, weight: .bold)
     let mediumTextFont = UIFont.systemFont(ofSize: 17.0, weight: .semibold)
+    
     let appearanceConfiguration = OnboardViewController.AppearanceConfiguration(tintColor: tintColor,
                                                                                 titleColor: titleColor,
                                                                                 textColor: .white,
@@ -109,8 +122,15 @@ class ViewController: UIViewController {
       button.layer.shadowRadius = 2.0
       button.layer.shadowOpacity = 0.2
     }
+    
+    let subtitleActionButtonStyling: OnboardViewController.ButtonStyling = { button in
+        button.setTitleColor(.black, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 12.0, weight: .regular)
+    }
+    
     let appearance = OnboardViewController.AppearanceConfiguration(advanceButtonStyling: advanceButtonStyling,
-                                                                    actionButtonStyling: actionButtonStyling)
+                                                                   actionButtonStyling: actionButtonStyling,
+                                                                   subtitleActionButtonStyling: subtitleActionButtonStyling)
     let onboardingVC = OnboardViewController(pageItems: onboardingPages,
                                              appearanceConfiguration: appearance)
     onboardingVC.modalPresentationStyle = .formSheet

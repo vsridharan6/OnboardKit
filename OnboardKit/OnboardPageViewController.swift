@@ -13,6 +13,7 @@ internal protocol OnboardPageViewControllerDelegate: class {
   ///   - pageVC: The `OnboardPageViewController` object
   ///   - index: The page index
   func pageViewController(_ pageVC: OnboardPageViewController, actionTappedAt index: Int)
+    func pageViewController(_ pageVC: OnboardPageViewController, subtitleActionTappedAt index: Int)
 
   /// Informs the `delegate` that the advance(next) button was tapped
   ///
@@ -27,7 +28,7 @@ internal final class OnboardPageViewController: UIViewController {
   private lazy var pageStackView: UIStackView = {
     let stackView = UIStackView()
     stackView.translatesAutoresizingMaskIntoConstraints = false
-    stackView.spacing = 16.0
+    stackView.spacing = 20.0
     stackView.axis = .vertical
     stackView.alignment = .center
     return stackView
@@ -62,6 +63,13 @@ internal final class OnboardPageViewController: UIViewController {
     button.titleLabel?.font = UIFont.preferredFont(forTextStyle: .title2)
     return button
   }()
+    
+    private lazy var subtitleActionButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.titleLabel?.font = UIFont.preferredFont(forTextStyle: .title1)
+        return button
+    }()
 
   private lazy var advanceButton: UIButton = {
     let button = UIButton()
@@ -114,6 +122,14 @@ internal final class OnboardPageViewController: UIViewController {
       actionButton.setTitleColor(appearanceConfiguration.tintColor, for: .normal)
       actionButton.titleLabel?.font = appearanceConfiguration.titleFont
     }
+    
+    subtitleActionButton.sizeToFit()
+    if let subtitleActionButtonStyling = appearanceConfiguration.subtitleActionButtonStyling {
+        subtitleActionButtonStyling(subtitleActionButton)
+    } else {
+        subtitleActionButton.setTitleColor(appearanceConfiguration.tintColor, for: .normal)
+        subtitleActionButton.titleLabel?.font = appearanceConfiguration.textFont
+    }
   }
 
   override func loadView() {
@@ -128,13 +144,18 @@ internal final class OnboardPageViewController: UIViewController {
       pageStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
       pageStackView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor)
       ])
+    
     pageStackView.addArrangedSubview(imageView)
     pageStackView.addArrangedSubview(descriptionLabel)
     pageStackView.addArrangedSubview(actionButton)
     pageStackView.addArrangedSubview(advanceButton)
+    pageStackView.addArrangedSubview(subtitleActionButton)
 
     actionButton.addTarget(self,
                            action: #selector(OnboardPageViewController.actionTapped),
+                           for: .touchUpInside)
+    subtitleActionButton.addTarget(self,
+                           action: #selector(OnboardPageViewController.subtitleActionTapped),
                            for: .touchUpInside)
     advanceButton.addTarget(self,
                             action: #selector(OnboardPageViewController.advanceTapped),
@@ -152,6 +173,7 @@ internal final class OnboardPageViewController: UIViewController {
     configureImageView(page.imageName)
     configureDescriptionLabel(page.description)
     configureActionButton(page.actionButtonTitle, action: page.action)
+    configureSubtitleActionButton(page.actionButtonSubtitle, action: page.subtitleAction)
     configureAdvanceButton(page.advanceButtonTitle)
   }
 
@@ -173,7 +195,7 @@ internal final class OnboardPageViewController: UIViewController {
       descriptionLabel.text = pageDescription
       NSLayoutConstraint.activate([
         descriptionLabel.heightAnchor.constraint(greaterThanOrEqualTo: pageStackView.heightAnchor, multiplier: 0.2),
-        descriptionLabel.widthAnchor.constraint(equalTo: pageStackView.widthAnchor, multiplier: 0.8)
+        descriptionLabel.widthAnchor.constraint(equalTo: pageStackView.widthAnchor, multiplier: 0.5)
         ])
     } else {
       descriptionLabel.isHidden = true
@@ -187,6 +209,15 @@ internal final class OnboardPageViewController: UIViewController {
       actionButton.isHidden = true
     }
   }
+    
+    private func configureSubtitleActionButton(_ title: String?, action: OnboardPageAction?) {
+        if let actionButtonTitle = title {
+            subtitleActionButton.setTitle(actionButtonTitle, for: .normal)
+        } else {
+            subtitleActionButton.isHidden = true
+        }
+    }
+
 
   private func configureAdvanceButton(_ title: String) {
     advanceButton.setTitle(title, for: .normal)
@@ -196,6 +227,11 @@ internal final class OnboardPageViewController: UIViewController {
   @objc fileprivate func actionTapped() {
     delegate?.pageViewController(self, actionTappedAt: pageIndex)
   }
+    
+    // MARK: - User Actions
+    @objc fileprivate func subtitleActionTapped() {
+        delegate?.pageViewController(self, subtitleActionTappedAt: pageIndex)
+    }
 
   @objc fileprivate func advanceTapped() {
     delegate?.pageViewController(self, advanceTappedAt: pageIndex)

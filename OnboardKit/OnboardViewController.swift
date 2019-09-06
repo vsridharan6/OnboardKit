@@ -70,7 +70,6 @@ final public class OnboardViewController: UIViewController {
     pageViewController.dataSource = self
     pageViewController.delegate = self
     pageViewController.view.frame = view.bounds
-    pageViewController.isPagingEnabled = false
 
     let pageControlApperance = UIPageControl.appearance(whenContainedInInstancesOf: [OnboardViewController.self])
     pageControlApperance.pageIndicatorTintColor = appearanceConfiguration.tintColor.withAlphaComponent(0.3)
@@ -159,6 +158,18 @@ extension OnboardViewController: OnboardPageViewControllerDelegate {
       })
     }
   }
+    
+    
+    func pageViewController(_ pageVC: OnboardPageViewController, subtitleActionTappedAt index: Int) {
+        if let pageAction = pageItems[index].subtitleAction {
+            pageAction({ (success, error) in
+                guard error == nil else { return }
+                if success {
+                        // no impt
+                }
+            })
+        }
+    }
 
   func pageViewController(_ pageVC: OnboardPageViewController, advanceTappedAt index: Int) {
     if index == pageItems.count - 1 {
@@ -219,6 +230,7 @@ public extension OnboardViewController {
     ///
     /// - note: Defualts to nil. If not used, the button will be customized based on the title properties
     let actionButtonStyling: ButtonStyling?
+    let subtitleActionButtonStyling: ButtonStyling?
 
     public init(tintColor: UIColor = UIColor(red: 0.0, green: 122.0/255.0, blue: 1.0, alpha: 1.0),
                 titleColor: UIColor? = nil,
@@ -228,7 +240,8 @@ public extension OnboardViewController {
                 titleFont: UIFont = UIFont.preferredFont(forTextStyle: .title1),
                 textFont: UIFont = UIFont.preferredFont(forTextStyle: .body),
                 advanceButtonStyling: ButtonStyling? = nil,
-                actionButtonStyling: ButtonStyling? = nil) {
+                actionButtonStyling: ButtonStyling? = nil,
+                subtitleActionButtonStyling: ButtonStyling? = nil) {
       self.tintColor = tintColor
       self.titleColor = titleColor ?? textColor
       self.textColor = textColor
@@ -238,6 +251,7 @@ public extension OnboardViewController {
       self.textFont = textFont
       self.advanceButtonStyling = advanceButtonStyling
       self.actionButtonStyling = actionButtonStyling
+        self.subtitleActionButtonStyling = subtitleActionButtonStyling
     }
   }
 }
